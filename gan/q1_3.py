@@ -1,9 +1,11 @@
+import os
+# os.environ['PYTORCH_JIT'] = '0'
+# os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 import argparse
 import os
 from utils import get_args
 
 import torch
-
 from networks import Discriminator, Generator
 import torch.nn.functional as F
 from train import train_model
@@ -16,8 +18,12 @@ def compute_discriminator_loss(
     # TODO 1.3: Implement GAN loss for discriminator.
     # Do not use discrim_interp, interp, lamb. They are placeholders
     # for Q1.5.
+    real_targets = torch.ones_like(discrim_real)
+    fake_targets = torch.zeros_like(discrim_fake)
+    real_loss =  F.binary_cross_entropy_with_logits(discrim_real,real_targets)
+    fake_loss = F.binary_cross_entropy_with_logits(discrim_fake,fake_targets)
     ##################################################################
-    loss = None
+    loss = real_loss+ fake_loss
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
@@ -28,7 +34,7 @@ def compute_generator_loss(discrim_fake):
     ##################################################################
     # TODO 1.3: Implement GAN loss for the generator.
     ##################################################################
-    loss = None
+    loss = F.binary_cross_entropy_with_logits(discrim_fake,torch.ones_like(discrim_fake).cuda())
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################

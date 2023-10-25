@@ -1,3 +1,4 @@
+
 from glob import glob
 import os
 import torch
@@ -28,8 +29,12 @@ def get_optimizers_and_schedulers(gen, disc):
     # The learning rate for the generator should be decayed to 0 over
     # 100K iterations.
     ##################################################################
-    scheduler_discriminator = None
-    scheduler_generator = None
+    scheduler_discriminator = torch.optim.lr_scheduler.LambdaLR(
+        optim_discriminator, 
+        lr_lambda=lambda x: 1 - x / 500000)
+    scheduler_generator =  torch.optim.lr_scheduler.LambdaLR(
+        optim_generator, 
+        lr_lambda=lambda x: 1 - x / 100000)
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
@@ -72,7 +77,7 @@ def train_model(
     torch.backends.cudnn.benchmark = True # speed up training
     ds_transforms = build_transforms()
     train_loader = torch.utils.data.DataLoader(
-        Dataset(root="../datasets/CUB_200_2011_32", transform=ds_transforms),
+        Dataset(root="/home/arpitsah/Desktop/Fall-2023/VLR/hw2/generative-modeling/datasets/CUB_200_2011_32", transform=ds_transforms),
         batch_size=batch_size,
         shuffle=True,
         num_workers=4,
@@ -105,8 +110,9 @@ def train_model(
                 # 2. Compute discriminator output on the train batch.
                 # 3. Compute the discriminator output on the generated data.
                 ##################################################################
-                discrim_real = None
-                discrim_fake = None
+                fake_batch = gen(train_batch.shape[0])
+                discrim_real = disc(train_batch)
+                discrim_fake = disc(fake_batch)
                 ##################################################################
                 #                          END OF YOUR CODE                      #
                 ##################################################################
@@ -136,8 +142,8 @@ def train_model(
                     # TODO 1.2: Compute generator and discriminator output on
                     # generated data.
                     ###################################################################
-                    fake_batch = None
-                    discrim_fake = None
+                    fake_batch = gen(train_batch.shape[0])
+                    discrim_fake = disc(fake_batch)
                     ##################################################################
                     #                          END OF YOUR CODE                      #
                     ##################################################################
@@ -156,7 +162,7 @@ def train_model(
                         # TODO 1.2: Generate samples using the generator.
                         # Make sure they lie in the range [0, 1]!
                         ##################################################################
-                        generated_samples = None
+                        generated_samples = (gen(train_batch.shape[0]) + 1 )/2
                         ##################################################################
                         #                          END OF YOUR CODE                      #
                         ##################################################################
