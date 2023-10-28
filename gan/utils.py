@@ -47,6 +47,7 @@ def interpolate_latent_space(gen, path):
     z[:,1] = gridy.reshape(-1).cuda()
     
     out =  gen.forward_given_samples(z)
+    out = (out + 1 )/2
     torchvision.utils.save_image(out, path,nrow=10)
     ##################################################################
     #                          END OF YOUR CODE                      #
@@ -54,7 +55,7 @@ def interpolate_latent_space(gen, path):
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--disable_amp", action="store_true")
-    # parser.add_argument("--disable_amp", action="store_true", default=True)
+    # parser.add_argument("--disable_amp", action="store_true")
+    parser.add_argument("--disable_amp", action="store_true", default=True)
     args = parser.parse_args()
     return args

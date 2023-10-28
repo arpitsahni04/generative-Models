@@ -24,7 +24,15 @@ class Encoder(nn.Module):
         # TODO 2.1: Set up the network layers. First create the self.convs.
         # Then create self.fc with output dimension == self.latent_dim
         ##################################################################
-        self.convs = None
+        self.convs = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)),
+            nn.ReLU(),
+            nn.Conv2d(32,64,kernel_size=3,stride=2,padding=1),
+            nn.ReLU(),
+            nn.Conv2d(64,128,kernel_size=3,stride=2,padding=1),
+            nn.ReLU(),
+            nn.Conv2d(128,256,kernel_size=(3,3),stride=2,padding=1)
+        )
         self.fc = None
         ##################################################################
         #                          END OF YOUR CODE                      #

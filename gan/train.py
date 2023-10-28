@@ -121,8 +121,9 @@ def train_model(
                 # TODO 1.5 Compute the interpolated batch and run the
                 # discriminator on it.
                 ###################################################################
-                interp = None
-                discrim_interp = None
+                epsilon = torch.randn(train_batch.shape[0],1,1,1).cuda()
+                interp = epsilon *train_batch + (1-epsilon)*fake_batch
+                discrim_interp = disc(interp)
                 ##################################################################
                 #                          END OF YOUR CODE                      #
                 ##################################################################
