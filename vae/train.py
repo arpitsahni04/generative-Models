@@ -18,7 +18,11 @@ def ae_loss(model, x):
     ##################################################################
     # TODO 2.2: Fill in MSE loss between x and its reconstruction.
     ##################################################################
-    loss = None
+    criterion= nn.MSELoss(reduction='sum')
+    z=  model.encoder(x)
+    dec_out = model.decoder(z)
+    loss = criterion(dec_out,x)
+    loss = loss/x.shape[0]
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
@@ -38,9 +42,17 @@ def vae_loss(model, x, beta = 1):
     # closed form, you can find the formula here:
     # (https://stats.stackexchange.com/questions/318748/deriving-the-kl-divergence-loss-for-vaes).
     ##################################################################
-    total_loss = None
-    recon_loss = None
-    kl_loss = None
+    mean, log_var =  model.encoder(x)
+    std = torch.exp(log_var*0.5)
+    var = torch.exp(log_var)
+    ep =  torch.randn_like(std)
+    
+    z = mean + std*ep # reparameterization trick
+    dec_out = model.decoder(z)
+    recon_loss = F.mse_loss(dec_out,x,reduction='sum')
+    recon_loss  = recon_loss/len(x)
+    kl_loss = torch.mean(-0.5 * torch.sum (1+ log_var - mean**2 - var,dim=1))
+    total_loss = recon_loss + beta*kl_loss
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
@@ -58,7 +70,7 @@ def linear_beta_scheduler(max_epochs=None, target_val = 1):
     # linearly from 0 at epoch 0 to target_val at epoch max_epochs.
     ##################################################################
     def _helper(epoch):
-        pass
+        return (target_val*epoch)/max_epochs
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
