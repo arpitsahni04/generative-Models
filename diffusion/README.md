@@ -1,8 +1,7 @@
-Please follow the instructions for this part of the assignment in THIS order!
 
 First, download the pre-trained checkpoint from https://drive.google.com/file/d/1gtn9Jv9jBUol7iJw-94hw4j6KfpG3SZE/view?usp=sharing.
 
-Diffusion models have recently become a very popular generative modeling technique. In this assignment, we will experiment with different sampling methods for diffusion models. Diffusion models apply a series of gaussian noise to an input image, and try to denoise these noisy images by predicting the noise at each timestep. For this assignment, we will use the provided pre-trained diffusion model trained on CIFAR-10 and will implement different sampling techniques for model inference. Please refer to Lilian Weng's blog post here: https://lilianweng.github.io/posts/2021-07-11-diffusion-models/ for additional explanation/derivation. In this assignment, we are following the notation from Lilian Weng's blogpost. 
+Diffusion models have recently become a very popular generative modeling technique. we will experiment with different sampling methods for diffusion models. Diffusion models apply a series of gaussian noise to an input image, and try to denoise these noisy images by predicting the noise at each timestep. we will use the provided pre-trained diffusion model trained on CIFAR-10 and will implement different sampling techniques for model inference. Please refer to Lilian Weng's blog post here: https://lilianweng.github.io/posts/2021-07-11-diffusion-models/ for additional explanation/derivation. we are following the notation from Lilian Weng's blogpost. 
 
 Given an input image $x_0$, the forward process sequentially applies a gaussian noise to the image, producing the following conditional distribution:
 $$q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t\mathcal{I})$$
@@ -49,7 +48,6 @@ The algorithm should then look something like:
    2. Find $x_{t-1}$ using the equations above.
 3. Return the final $\hat{x_0}$
 
-*3.1*. Implement DDPM sampling as described above to generate samples from the pre-trained diffusion model. Fill out all TODOs in the code corresponding to 3.1 in `model.py`. Run inference using the following command:
 ```
 python inference.py --ckpt epoch_199.pth --sampling-method ddpm
 ```
@@ -91,12 +89,12 @@ The algorithm for DDIM should then look something like:
    2. Find $x_{\tau_{i - 1}}$ using the equations above.
 3. Return $x_0$
 
-*3.2*. Implement the DDIM sampling method as described above to generate samples from the pre-trained diffusion model. Fill out all TODOs in the code corresponding to 3.2 in `model.py`. Run inference using the following command:
+*3.2*. Implemented the DDIM sampling method as described above to generate samples from the pre-trained diffusion model. 
 ```
 python inference.py --ckpt epoch_199.pth --sampling-method ddim --ddim-timesteps 100 --ddim-eta 0
 ```
 
-*3.3*. Finally, we are going to use the sampling methods above to compute the FID of the diffusion model. Fill out all TODOs in the code corresponding to 3.3 in `model.py` and `inference.py`. Compute FID for DDPM and DDIM using the following commands:
+*3.3*. Finally, we are going to use the sampling methods above to compute the FID of the diffusion model in `model.py` and `inference.py`. Compute FID for DDPM and DDIM using the following commands:
 
 ```
 python inference.py --ckpt epoch_199.pth --sampling-method ddpm --compute_fid
