@@ -15,33 +15,24 @@ import os
 from utils import *
 
 def ae_loss(model, x):
-    ##################################################################
-    # TODO 2.2: Fill in MSE loss between x and its reconstruction.
-    ##################################################################
+
     criterion= nn.MSELoss(reduction='sum')
     z=  model.encoder(x)
     dec_out = model.decoder(z)
     loss = criterion(dec_out,x)
     loss = loss/x.shape[0]
-    ##################################################################
-    #                          END OF YOUR CODE                      #
-    ##################################################################
+
 
     return loss, OrderedDict(recon_loss=loss)
 
 def vae_loss(model, x, beta = 1):
     """
-    TODO 2.5 : Fill in recon_loss and kl_loss.
+
     NOTE: For the kl loss term for the VAE, implement the loss in closed form, you can find the formula here:
     (https://stats.stackexchange.com/questions/318748/deriving-the-kl-divergence-loss-for-vaes).
     return loss, {recon_loss = loss}
     """
-    ##################################################################
-    # TODO 2.5: Fill in recon_loss and kl_loss.
-    # NOTE: For the kl loss term for the VAE, implement the loss in
-    # closed form, you can find the formula here:
-    # (https://stats.stackexchange.com/questions/318748/deriving-the-kl-divergence-loss-for-vaes).
-    ##################################################################
+
     mean, log_var =  model.encoder(x)
     std = torch.exp(log_var*0.5)
     var = torch.exp(log_var)
@@ -53,9 +44,7 @@ def vae_loss(model, x, beta = 1):
     recon_loss  = recon_loss/len(x)
     kl_loss = torch.mean(-0.5 * torch.sum (1+ log_var - mean**2 - var,dim=1))
     total_loss = recon_loss + beta*kl_loss
-    ##################################################################
-    #                          END OF YOUR CODE                      #
-    ##################################################################
+
     return total_loss, OrderedDict(recon_loss=recon_loss, kl_loss=kl_loss)
 
 
@@ -65,15 +54,11 @@ def constant_beta_scheduler(target_val = 1):
     return _helper
 
 def linear_beta_scheduler(max_epochs=None, target_val = 1):
-    ##################################################################
-    # TODO 2.8: Fill in helper. The value returned should increase
-    # linearly from 0 at epoch 0 to target_val at epoch max_epochs.
+
     ##################################################################
     def _helper(epoch):
         return (target_val*epoch)/max_epochs
-    ##################################################################
-    #                          END OF YOUR CODE                      #
-    ##################################################################
+
     return _helper
 
 def run_train_epoch(model, loss_mode, train_loader, optimizer, beta = 1, grad_clip = 1):

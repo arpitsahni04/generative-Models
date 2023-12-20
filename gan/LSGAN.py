@@ -11,29 +11,20 @@ from train import train_model
 def compute_discriminator_loss(
     discrim_real, discrim_fake, discrim_interp, interp, lamb
 ):
-    ##################################################################
-    # TODO: 1.4: Implement LSGAN loss for discriminator.
-    # Do not use discrim_interp, interp, lamb. They are placeholders
-    # for Q1.5.
-    ##################################################################
+
     real_loss = F.mse_loss(discrim_real, torch.ones_like(discrim_real))
     fake_loss =F.mse_loss(discrim_fake, torch.zeros_like(discrim_fake))
     loss = 0.5 * (real_loss + fake_loss)
-    ##################################################################
-    #                          END OF YOUR CODE                      #
-    ##################################################################
+
     return loss
 
 
 def compute_generator_loss(discrim_fake):
-    ##################################################################
-    # TODO: 1.4: Implement LSGAN loss for generator.
+
     ##################################################################
     
     loss = 0.5 * F.mse_loss(discrim_fake, torch.ones_like(discrim_fake))
-    ##################################################################
-    #                          END OF YOUR CODE                      #
-    ##################################################################
+
     return loss
 
 if __name__ == "__main__":

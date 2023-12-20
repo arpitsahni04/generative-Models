@@ -9,17 +9,12 @@ from cleanfid import fid as cleanfid
 
 @torch.no_grad()
 def get_fid(gen, dataset_name, dataset_resolution, z_dimension, batch_size, num_gen):
-    ##################################################################
-    # TODO 3.3: Write a function that samples images from the
-    # diffusion model given z
-    # Note: The output must be in the range [0, 255]!
+
     ##################################################################
     def gen_fn(x):
         x_shape = (batch_size, gen.channels, dataset_resolution, dataset_resolution)
         return gen.sample_given_z(x,x_shape) * 255.0
-    ##################################################################
-    #                          END OF YOUR CODE                      #
-    ##################################################################
+
     score = cleanfid.compute_fid(
         gen=gen_fn,
         dataset_name=dataset_name,
